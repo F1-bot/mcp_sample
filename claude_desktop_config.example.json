@@ -15,7 +15,7 @@
   ],
 
   "mcpServers": {
-    "Store Manager": {
+    "StoreManager": {
       "command": "C:\\Users\\ВашКористувач\\mcp_sample\\.venv\\Scripts\\python.exe",
       "args": [
         "C:\\Users\\ВашКористувач\\mcp_sample\\server.py"
