@@ -13,6 +13,7 @@
 """
 import json
 import sqlite3
+import subprocess
 import sys
 import uuid
 from pathlib import Path
@@ -361,17 +362,30 @@ def test_server_prefers_the_modern_import():
         f"порядок у шимі: {order}"
 
 
-def test_readme_recommends_inspector_v2_not_mcp_dev():
+def test_nothing_recommends_deprecated_mcp_dev():
     """
     `mcp dev` тягне Inspector 1.x, і npm позначає його deprecated:
     «v1 is deprecated. Upgrade to v2». Перевірено під час підготовки.
+
+    Перевіряємо ВСІ файли, які читає студент, а не лише README: перший
+    варіант цього тесту дивився тільки в README, і через те підказка
+    `mcp dev` півтора тижня жила в `server.py` і `verify_server.py`
+    усупереч тому, що написано в методичці.
     """
-    text = (ROOT / "README.md").read_text(encoding="utf-8")
-    assert "npx @modelcontextprotocol/inspector@latest" in text
-    bad = [ln for ln in text.splitlines()
-           if "mcp dev" in ln and "не користуйтеся" not in ln.lower()
-           and "deprecated" not in ln.lower()]
-    assert not bad, f"README досі радить mcp dev: {bad}"
+    files = ["README.md", "server.py", "verify_server.py", "setup_db.py"]
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "npx @modelcontextprotocol/inspector@latest" in readme
+
+    bad = []
+    for name in files:
+        for i, ln in enumerate((ROOT / name).read_text(encoding="utf-8").splitlines(), 1):
+            if "mcp dev" not in ln:
+                continue
+            low = ln.lower()
+            if "не " in low or "deprecated" in low or "застар" in low:
+                continue                      # рядок-застереження — це можна
+            bad.append(f"{name}:{i}: {ln.strip()}")
+    assert not bad, "досі радять застарілий mcp dev:\n" + "\n".join(bad)
 
 
 def test_inspector_config_example_is_valid_json():
@@ -384,6 +398,23 @@ def test_inspector_config_example_is_valid_json():
 
 
 def test_no_machine_specific_config_is_committed():
-    """inspector.config.json — особистий файл із локальним шляхом."""
-    assert not (ROOT / "inspector.config.json").exists(), \
-        "приберіть особистий конфіг, лишіть лише .example"
+    """
+    inspector.config.json містить абсолютний шлях до venv, тому його
+    не можна комітити.
+
+    Перший варіант цього тесту перевіряв, що файлу НЕМА НА ДИСКУ, — і
+    це було хибно: README велить студентові його створити, тож тест
+    падав би в кожного, хто виконав інструкцію. Перевіряти треба не
+    наявність файлу, а те, що git його не бачить.
+    """
+    assert "inspector.config.json" in \
+        (ROOT / ".gitignore").read_text(encoding="utf-8"), \
+        "inspector.config.json має бути в .gitignore"
+
+    if not (ROOT / ".git").exists():
+        return                        # розпакований архів без git — нічого перевіряти
+
+    tracked = subprocess.run(
+        ["git", "ls-files", "inspector.config.json"],
+        cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    assert not tracked, f"особистий конфіг потрапив у git: {tracked}"

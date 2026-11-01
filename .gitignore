@@ -17,6 +17,10 @@ __pycache__/
 # Секрети
 .env
 
+# Особистий конфіг Inspector: містить абсолютний шлях до вашого venv.
+# У репозиторії лишається лише inspector.config.example.json.
+inspector.config.json
+
 # Редактори й ОС
 .vscode/
 .idea/

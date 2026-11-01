@@ -5,9 +5,11 @@ server.py — MCP-сервер «Store Manager». Шаблон до Лабора
     python setup_db.py                 # спершу база
     python server.py                   # stdio — так його запускає Claude Desktop
     python server.py --http            # Streamable HTTP на :8000/mcp
-    mcp dev server.py                  # MCP Inspector (веб-інтерфейс)
     python verify_server.py            # швидка перевірка без Claude й Inspector
-    pytest -q                          # 30 тестів, без мережі й без моделі
+    pytest -q                          # 45 тестів, без мережі й без моделі
+
+    # MCP Inspector v2. НЕ `mcp dev` — та команда тягне застарілу 1.x:
+    npx @modelcontextprotocol/inspector@latest --config inspector.config.json
 
 API-КЛЮЧІ: не потрібні жодні.
 

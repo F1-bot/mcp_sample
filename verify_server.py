@@ -105,8 +105,9 @@ async def main() -> int:
         return 1
 
     print("  Усе на місці. Далі:")
-    print("    mcp dev server.py          — Inspector")
-    print("    python server.py --http    — Streamable HTTP")
+    print("    npx @modelcontextprotocol/inspector@latest \\")
+    print("        --config inspector.config.json   — Inspector v2")
+    print("    python server.py --http              — Streamable HTTP")
     print("=" * 68)
     return 0
 
