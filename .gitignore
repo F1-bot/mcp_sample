@@ -1,0 +1,24 @@
+# База створюється локально через setup_db.py — у git їй не місце:
+# вона бінарна, змінюється при кожному запуску й конфліктує при merge.
+*.db
+*.db-journal
+*.db-wal
+
+# Віртуальні середовища
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Секрети
+.env
+
+# Редактори й ОС
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
