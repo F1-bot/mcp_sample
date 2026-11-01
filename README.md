@@ -110,7 +110,7 @@ except ModuleNotFoundError:
 ```json
 {
   "mcpServers": {
-    "StoreManager": {
+    "Store Manager": {
       "command": "C:\\шлях\\до\\mcp_sample\\.venv\\Scripts\\python.exe",
       "args": ["C:\\шлях\\до\\mcp_sample\\server.py"]
     }
