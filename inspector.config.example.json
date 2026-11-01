@@ -1,0 +1,22 @@
+{
+  "_коментар": [
+    "Конфіг для MCP Inspector v2. Запуск:",
+    "   npx @modelcontextprotocol/inspector@latest --config inspector.config.json",
+    "",
+    "Навіщо він, якщо можна передати команду аргументом: без конфігу",
+    "Inspector підписує сервер як 'python.exe'. З конфігом він має",
+    "нормальну назву, і на скріншоті для звіту це видно.",
+    "",
+    "Формат такий самий, як у claude_desktop_config.json - один файл",
+    "описує сервер і для Inspector, і для Claude Desktop.",
+    "",
+    "Скопіюйте в inspector.config.json і підставте свій шлях."
+  ],
+
+  "mcpServers": {
+    "Store Manager": {
+      "command": "C:\\Users\\ВашКористувач\\mcp_sample\\.venv\\Scripts\\python.exe",
+      "args": ["server.py"]
+    }
+  }
+}

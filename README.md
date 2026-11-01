@@ -99,6 +99,7 @@ except ModuleNotFoundError:
 | `tests/test_server.py` | 41 тест |
 | `requirements.txt` | зафіксовані версії |
 | `claude_desktop_config.example.json` | приклад конфігу для Claude Desktop |
+| `inspector.config.example.json` | приклад конфігу для MCP Inspector v2 |
 
 ---
 
@@ -132,12 +133,28 @@ except ModuleNotFoundError:
 ### MCP Inspector — швидше за Claude
 
 ```bash
-mcp dev server.py
+npx @modelcontextprotocol/inspector@latest python server.py
 ```
 
 Відкриється веб-інтерфейс, де видно всі Tools / Resources / Prompts і
 де їх можна викликати руками. Для розробки це значно швидше, ніж
-перезапускати Claude після кожної правки.
+перезапускати Claude після кожної правки. Потрібен Node.js.
+
+> **Не користуйтеся `mcp dev server.py`.** Ця команда тягне Inspector
+> гілки 1.x, і npm прямо каже: *«v1 is deprecated. Upgrade to v2:
+> npm i @modelcontextprotocol/inspector@latest. v1 gets security fixes
+> only.»* Команда вище ставить актуальну — під час перевірки це була
+> **v2.13.0**.
+
+Щоб сервер у Inspector мав нормальну назву (а не `python.exe`),
+скопіюйте `inspector.config.example.json` у `inspector.config.json`,
+підставте свій шлях і запускайте так:
+
+```bash
+npx @modelcontextprotocol/inspector@latest --config inspector.config.json
+```
+
+Формат файлу той самий, що й у `claude_desktop_config.json`.
 
 ---
 
@@ -306,8 +323,9 @@ CREATE TABLE orders (
 4. **Залиште механізми захисту**: `mode=ro` + авторизатор для
    читального SQL, атомарний UPDATE там, де списуються ресурси.
 5. Допишіть тести під свою область — за зразком `tests/test_server.py`.
-6. Перевірте через `verify_server.py`, потім `mcp dev server.py`, потім
-   Claude Desktop.
+6. Перевірте через `verify_server.py`, потім Inspector
+   (`npx @modelcontextprotocol/inspector@latest --config inspector.config.json`),
+   потім Claude Desktop.
 
 ---
 
@@ -320,7 +338,8 @@ CREATE TABLE orders (
 | сервер не з'явився в Claude | шлях до `python` має бути з venv і абсолютний |
 | Claude бачить сервер, але не інструменти | подивіться лог Claude Desktop; найчастіше сервер упав на імпорті |
 | щось пише у stdout і протокол ламається | у stdio-режимі stdout належить JSON-RPC. Друкуйте лише в stderr |
-| `mcp dev` не запускається | потрібен Node.js: Inspector ставиться через `npx` |
+| Inspector не запускається | потрібен Node.js: він ставиться через `npx` |
+| у Inspector сервер зветься `python.exe` | запустіть із `--config inspector.config.json` |
 
 ---
 

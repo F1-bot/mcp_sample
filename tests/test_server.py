@@ -359,3 +359,31 @@ def test_server_prefers_the_modern_import():
              and (n.module or "").startswith("mcp.server.")]
     assert order[:2] == ["mcp.server.mcpserver", "mcp.server.fastmcp"], \
         f"порядок у шимі: {order}"
+
+
+def test_readme_recommends_inspector_v2_not_mcp_dev():
+    """
+    `mcp dev` тягне Inspector 1.x, і npm позначає його deprecated:
+    «v1 is deprecated. Upgrade to v2». Перевірено під час підготовки.
+    """
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "npx @modelcontextprotocol/inspector@latest" in text
+    bad = [ln for ln in text.splitlines()
+           if "mcp dev" in ln and "не користуйтеся" not in ln.lower()
+           and "deprecated" not in ln.lower()]
+    assert not bad, f"README досі радить mcp dev: {bad}"
+
+
+def test_inspector_config_example_is_valid_json():
+    import json
+
+    cfg = json.loads((ROOT / "inspector.config.example.json")
+                     .read_text(encoding="utf-8"))
+    assert "Store Manager" in cfg["mcpServers"]
+    assert cfg["mcpServers"]["Store Manager"]["args"] == ["server.py"]
+
+
+def test_no_machine_specific_config_is_committed():
+    """inspector.config.json — особистий файл із локальним шляхом."""
+    assert not (ROOT / "inspector.config.json").exists(), \
+        "приберіть особистий конфіг, лишіть лише .example"
